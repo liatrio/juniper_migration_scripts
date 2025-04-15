@@ -12,6 +12,9 @@ venv/
 .env/
 .venv/
 
+# JavaScript
+node_modules/
+
 # IDE
 .idea/
 .vscode/
