@@ -24,3 +24,4 @@ graphql/data/
 
 # Output files
 *.json
+!graphql/package.json

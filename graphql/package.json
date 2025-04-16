@@ -1,0 +1,31 @@
+{
+  "name": "juniper-migration-graphql",
+  "version": "1.0.0",
+  "description": "Scripts for retrieving GitHub organization adn repository information using the GraphQL API.",
+  "main": "org_summary.js",
+  "type": "module",
+  "scripts": {
+    "start": "node org_summary.js",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liatrio/juniper_migration_scripts.git"
+  },
+  "keywords": [
+    "github",
+    "graphql",
+    "migration",
+    "organization",
+    "script"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liatrio/juniper_migration_scripts/issues"
+  },
+  "homepage": "https://github.com/liatrio/juniper_migration_scripts/graphql/#readme",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
