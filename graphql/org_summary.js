@@ -17,7 +17,7 @@ const fileName = org + '_org_summary_' + ts + '.json';
 const options = {
   skipArchive: args.includes('--skip-archive'),
   skipFork: args.includes('--skip-fork'),
-  orgMembers: args.includes('--org-members')
+  orgMembers: args.includes('--org-members'),
   verbose: args.includes('-v') || args.includes('--verbose')
 };
 
@@ -57,6 +57,7 @@ if (options.orgMembers) {
     console.error("Error fetching organization members:", error);
     process.exit(1);
   }
+  log.success(`Successfully wrote organization members to ./data/members_${fileName}`);
 }
 
 async function fetchOrgData() {
