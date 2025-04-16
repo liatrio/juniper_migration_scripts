@@ -1,47 +1,93 @@
-# Git Repository Analysis Tools
+# GitHub Organization Analysis Tools
 
-A set of Python tools to analyze git repositories for GitHub Enterprise Migration (EMU) compatibility.
+A collection of tools to analyze GitHub organizations and repositories, primarily using GraphQL API for detailed repository information.
 
-## Tools Overview
+## GraphQL Organization Summary Tool
 
-1. `git_repo_size_limit.py`: Analyzes repositories using git-sizer and checks EMU migration limits
-2. `gh_repo_stats.py`: Analyzes an entire GitHub organization using gh-repo-stats
+The GraphQL Organization Summary tool provides detailed information about a GitHub organization and its repositories, including repository statistics, branch protection rules, and more.
 
-## Prerequisites
+### Prerequisites
 
-1. Python 3.6+
-2. git-sizer
-   ```bash
-   brew install git-sizer
-   ```
-3. GitHub CLI and extensions
-   ```bash
-   # Install GitHub CLI
-   brew install gh
+1. Node.js 14+
+2. GitHub Personal Access Token with these permissions:
+   - `read:org`
+   - `repo`
 
-   # Install the repo-stats extension
-   gh extension install mona-actions/gh-repo-stats
-   ```
-4. Python packages
-   ```bash
-   pip install requests python-dotenv
-   ```
+### Configuration
 
-## Configuration
-
-Create a `.env` file with your GitHub credentials:
+Set up your GitHub token as an environment variable:
 ```bash
-# Create .env file
-echo "GITHUB_TOKEN=your_token_here" >> .env
-echo "GITHUB_ORG=your_org_name" >> .env
+export GH_PAT_FG="your_github_token_here"
 ```
 
-Make sure your GitHub token has these permissions:
-- `read:org`
-- `repo`
+### Usage
 
-## Usage
+The organization summary script supports various options for filtering repositories:
 
+```bash
+# Get summary for all repositories in an organization
+node graphql/org_summary.js <organization>
+
+# Exclude archived repositories
+node graphql/org_summary.js <organization> --skip-archive
+
+# Exclude forked repositories
+node graphql/org_summary.js <organization> --skip-fork
+
+# Exclude both archived and forked repositories
+node graphql/org_summary.js <organization> --skip-archive --skip-fork
+```
+
+Example:
+```bash
+node graphql/org_summary.js microsoft --skip-archive
+```
+
+The script will:
+1. Fetch organization information
+2. Retrieve repository details (paginated in batches of 100)
+3. Generate a JSON report in `graphql/data/org_summary.json`
+
+### Output
+
+The tool generates a detailed JSON report containing:
+- Organization details
+- Repository information including:
+  - Basic metadata (name, description)
+  - Branch protection rules
+  - Commit statistics
+  - Pull request and issue counts
+  - Wiki and project settings
+  - And more
+
+## Additional Tools
+
+### Git Repository Size Analysis
+
+The `git_repo_size_limit.py` script analyzes repositories using git-sizer to check EMU migration limits.
+
+Prerequisites:
+```bash
+brew install git-sizer
+```
+
+### GitHub Repository Statistics
+
+The `gh_repo_stats.py` script provides organization-wide statistics using the gh-repo-stats extension.
+
+Prerequisites:
+```bash
+# Install GitHub CLI
+brew install gh
+
+# Install the repo-stats extension
+gh extension install mona-actions/gh-repo-stats
+```
+
+Both tools require Python 3.6+ and the following packages:
+```bash
+pip install requests python-dotenv
+```
 ### 1. Repository Size Analysis (git_repo_size_limit.py)
 
 This script analyzes repositories using git-sizer and checks EMU migration limits.
