@@ -4,8 +4,7 @@ import { getOrganizationRepositories } from './queries/repositoryQueries.js';
 import { argv } from "process";
 
 const credentials = {
-  githubConvertedToken: process.env.GH_PAT,
-  // githubUserName: process.env.GITHUB_USER || null
+  githubConvertedToken: process.env.GH_PAT
 };
 
 // Parse command line arguments
@@ -17,7 +16,6 @@ const fileName = org + '_org_summary_' + ts + '.json';
 const options = {
   skipArchive: args.includes('--skip-archive'),
   skipFork: args.includes('--skip-fork'),
-  // githubUserName: credentials.githubUserName || args.includes('--github-user')
 };
 
 if (args.length < 1 || args[0].startsWith('-h') || !org || !credentials.githubConvertedToken) {
