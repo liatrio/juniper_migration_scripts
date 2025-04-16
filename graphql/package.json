@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/liatrio/juniper_migration_scripts/graphql/#readme",
   "dependencies": {
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "@octokit/rest": "^21.1.1"
   }
 }

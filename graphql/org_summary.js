@@ -1,6 +1,7 @@
 import fs from "fs";
 import { getOrganizationInfo } from './queries/organizationQueries.js';
 import { getOrganizationRepositories } from './queries/repositoryQueries.js';
+import { getOrgMembers } from './queries/userQueries.js';
 import { argv } from "process";
 
 const credentials = {
@@ -16,6 +17,7 @@ const fileName = org + '_org_summary_' + ts + '.json';
 const options = {
   skipArchive: args.includes('--skip-archive'),
   skipFork: args.includes('--skip-fork'),
+  orgMembers: args.includes('--org-members')
 };
 
 if (args.length < 1 || args[0].startsWith('-h') || !org || !credentials.githubConvertedToken) {
@@ -28,6 +30,20 @@ if (args.length < 1 || args[0].startsWith('-h') || !org || !credentials.githubCo
 console.log(`Fetching data for organization: ${org}`);
 if (options.skipArchive) console.log('Excluding archived repositories');
 if (options.skipFork) console.log('Excluding forked repositories');
+
+if (options.orgMembers) {
+  try {
+  console.log('Fetching organization members');
+  const data = await getOrgMembers(org, credentials.githubConvertedToken);
+  await fs.promises.writeFile(
+    `./data/members_${fileName}`,
+    JSON.stringify(data, null, 2)
+  );
+  } catch (error) {
+    console.error("Error fetching organization members:", error);
+    process.exit(1);
+  }
+}
 
 async function fetchOrgData() {
   try {
