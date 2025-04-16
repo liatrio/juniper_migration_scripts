@@ -5,7 +5,7 @@ import { argv } from "process";
 
 const credentials = {
   githubConvertedToken: process.env.GH_PAT,
-  githubUserName: process.env.GITHUB_USER || null
+  // githubUserName: process.env.GITHUB_USER || null
 };
 
 // Parse command line arguments
@@ -17,12 +17,11 @@ const fileName = org + '_org_summary_' + ts + '.json';
 const options = {
   skipArchive: args.includes('--skip-archive'),
   skipFork: args.includes('--skip-fork'),
-  githubUserName: credentials.githubUserName || args.includes('--github-user')
+  // githubUserName: credentials.githubUserName || args.includes('--github-user')
 };
 
-if (args.length < 1 || args[0].startsWith('-h') || !org || !options.githubUserName) {
-  console.error("Usage: node org_summary.js <organization> [--skip-archive] [--skip-fork] [--github-user]");
-  console.error("Set GITHUB_USER environment variable or pass --github-user option");
+if (args.length < 1 || args[0].startsWith('-h') || !org || !credentials.githubConvertedToken) {
+  console.error("Usage: node org_summary.js <organization> [--skip-archive] [--skip-fork]");
   console.error("Set GH_PAT environment variable");
   process.exit(1);
 }
