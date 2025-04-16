@@ -1,25 +1,29 @@
 import fs from "fs";
 import { getOrganizationInfo } from './queries/organizationQueries.js';
 import { getOrganizationRepositories } from './queries/repositoryQueries.js';
+import { argv } from "process";
 
 const credentials = {
   githubConvertedToken: process.env.GH_PAT_FG,
-  // githubUserName: "NeillShazly"
-  githubUserName: "wai-calvin"
+  githubUserName: process.env.GITHUB_USER || null
 };
 
 // Parse command line arguments
 const args = process.argv.slice(2);
 const org = args[0];
-
+const ts = new Date().toISOString().replace(/:/g, '-');
+const fileName = org + '_org_summary_' + ts + '.json';
 // Extract options
 const options = {
   skipArchive: args.includes('--skip-archive'),
-  skipFork: args.includes('--skip-fork')
+  skipFork: args.includes('--skip-fork'),
+  githubUserName: credentials.githubUserName || args.includes('--github-user')
 };
 
-if (!org) {
-  console.error("Usage: node org_summary.js <organization> [--skip-archive] [--skip-fork]");
+if (args.length < 1 || args[0].startsWith('-h') || !org || !options.githubUserName) {
+  console.error("Usage: node org_summary.js <organization> [--skip-archive] [--skip-fork] [--github-user]");
+  console.error("Set GITHUB_USER environment variable or pass --github-user option");
+  console.error("Set GH_PAT_FG environment variable");
   process.exit(1);
 }
 
@@ -48,11 +52,11 @@ async function fetchOrgData() {
 
     // Write the combined data to file
     await fs.promises.writeFile(
-      "./data/org_summary.json",
+      `./data/${fileName}`,
       JSON.stringify(combinedData, null, 2)
     );
 
-    console.log("Successfully wrote organization summary to ./data/org_summary.json");
+    console.log(`Successfully wrote organization summary to ./data/${fileName}`);
   } catch (error) {
     console.error("Error fetching organization data:", error);
     process.exit(1);
