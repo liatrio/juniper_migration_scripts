@@ -18,18 +18,32 @@ const options = {
   skipArchive: args.includes('--skip-archive'),
   skipFork: args.includes('--skip-fork'),
   orgMembers: args.includes('--org-members')
+  verbose: args.includes('-v') || args.includes('--verbose')
+};
+
+// Logging utility
+const log = {
+  info: (message) => console.log(`[INFO] ${message}`),
+  verbose: (message) => options.verbose && console.log(`[VERBOSE] ${message}`),
+  error: (message) => console.error(`[ERROR] ${message}`),
+  success: (message) => console.log(`[SUCCESS] ${message}`)
+
 };
 
 if (args.length < 1 || args[0].startsWith('-h') || !org || !credentials.githubConvertedToken) {
-  console.error("Usage: node org_summary.js <organization> [--skip-archive] [--skip-fork]");
-  console.error("Set GH_PAT environment variable");
+  log.error("Usage: node org_summary.js <organization> [--skip-archive] [--skip-fork] [-v|--verbose]");
+  log.error("Set GH_PAT environment variable");
   process.exit(1);
 }
 
-// Log what we're doing
-console.log(`Fetching data for organization: ${org}`);
-if (options.skipArchive) console.log('Excluding archived repositories');
-if (options.skipFork) console.log('Excluding forked repositories');
+// Log configuration
+log.info(`Fetching data for organization: ${org}`);
+if (options.skipArchive) log.info('Excluding archived repositories');
+if (options.skipFork) log.info('Excluding forked repositories');
+if (options.verbose) log.info('Verbose logging enabled');
+
+log.verbose('Script configuration:');
+log.verbose(JSON.stringify({ org, options, outputFile: fileName }, null, 2));
 
 if (options.orgMembers) {
   try {
@@ -47,7 +61,7 @@ if (options.orgMembers) {
 
 async function fetchOrgData() {
   try {
-    console.log("Fetching organization and repository information...");
+    log.info("Fetching organization and repository information...");
     
     // Fetch both organization info and repository data in parallel
     const [orgInfo, repoInfo] = await Promise.all([
@@ -69,9 +83,9 @@ async function fetchOrgData() {
       JSON.stringify(combinedData, null, 2)
     );
 
-    console.log(`Successfully wrote organization summary to ./data/${fileName}`);
+    log.success(`Successfully wrote organization summary to ./data/${fileName}`);
   } catch (error) {
-    console.error("Error fetching organization data:", error);
+    log.error(`Error fetching organization data: ${error.message}`);
     process.exit(1);
   }
 }

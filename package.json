@@ -1,0 +1,12 @@
+{
+  "name": "juniper_2025_scripts",
+  "version": "1.0.0",
+  "description": "A set of Python tools to analyze git repositories for GitHub Enterprise Migration (EMU) compatibility.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
