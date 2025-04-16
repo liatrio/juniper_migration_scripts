@@ -14,6 +14,10 @@ venv/
 
 # JavaScript
 node_modules/
+<<<<<<< Updated upstream
+=======
+graphql/data/
+>>>>>>> Stashed changes
 
 # IDE
 .idea/
