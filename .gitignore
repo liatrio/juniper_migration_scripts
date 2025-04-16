@@ -12,6 +12,13 @@ venv/
 .env/
 .venv/
 
+# JavaScript
+node_modules/
+
+# Output directories
+data/
+**/data/
+
 # IDE
 .idea/
 .vscode/
@@ -20,3 +27,5 @@ venv/
 
 # Output files
 *.json
+!graphql/package.json
+
