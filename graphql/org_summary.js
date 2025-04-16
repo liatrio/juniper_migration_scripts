@@ -1,6 +1,7 @@
 import fs from "fs";
 import { getOrganizationInfo } from './queries/organizationQueries.js';
 import { getOrganizationRepositories } from './queries/repositoryQueries.js';
+import { getOrgMembers } from './queries/userQueries.js';
 import { argv } from "process";
 
 const credentials = {
@@ -16,6 +17,7 @@ const fileName = org + '_org_summary_' + ts + '.json';
 const options = {
   skipArchive: args.includes('--skip-archive'),
   skipFork: args.includes('--skip-fork'),
+  orgMembers: args.includes('--org-members'),
   verbose: args.includes('-v') || args.includes('--verbose')
 };
 
@@ -25,6 +27,7 @@ const log = {
   verbose: (message) => options.verbose && console.log(`[VERBOSE] ${message}`),
   error: (message) => console.error(`[ERROR] ${message}`),
   success: (message) => console.log(`[SUCCESS] ${message}`)
+
 };
 
 if (args.length < 1 || args[0].startsWith('-h') || !org || !credentials.githubConvertedToken) {
@@ -41,6 +44,21 @@ if (options.verbose) log.info('Verbose logging enabled');
 
 log.verbose('Script configuration:');
 log.verbose(JSON.stringify({ org, options, outputFile: fileName }, null, 2));
+
+if (options.orgMembers) {
+  try {
+  console.log('Fetching organization members');
+  const data = await getOrgMembers(org, credentials.githubConvertedToken);
+  await fs.promises.writeFile(
+    `./data/members_${fileName}`,
+    JSON.stringify(data, null, 2)
+  );
+  } catch (error) {
+    console.error("Error fetching organization members:", error);
+    process.exit(1);
+  }
+  log.success(`Successfully wrote organization members to ./data/members_${fileName}`);
+}
 
 async function fetchOrgData() {
   try {

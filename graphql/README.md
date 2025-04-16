@@ -21,6 +21,7 @@ The script supports the following command line options:
 - `<organization>`: (required) The name of the GitHub organization to query.
 - `--skip-archive`: (optional) Exclude archived repositories from the output.
 - `--skip-fork`: (optional) Exclude forked repositories from the output.
+- `--org-members`: (optional) Fetch organization members and save to a file.
 
 #### Usage
 

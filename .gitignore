@@ -27,4 +27,5 @@ data/
 
 # Output files
 *.json
-!package.json
+!graphql/package.json
+
