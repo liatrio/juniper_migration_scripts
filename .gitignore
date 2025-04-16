@@ -14,7 +14,10 @@ venv/
 
 # JavaScript
 node_modules/
-graphql/data/
+
+# Output directories
+data/
+**/data/
 
 # IDE
 .idea/
@@ -24,3 +27,4 @@ graphql/data/
 
 # Output files
 *.json
+!package.json
