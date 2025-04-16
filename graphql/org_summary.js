@@ -4,7 +4,7 @@ import { getOrganizationRepositories } from './queries/repositoryQueries.js';
 import { argv } from "process";
 
 const credentials = {
-  githubConvertedToken: process.env.GH_PAT_FG,
+  githubConvertedToken: process.env.GH_PAT,
   githubUserName: process.env.GITHUB_USER || null
 };
 
@@ -23,7 +23,7 @@ const options = {
 if (args.length < 1 || args[0].startsWith('-h') || !org || !options.githubUserName) {
   console.error("Usage: node org_summary.js <organization> [--skip-archive] [--skip-fork] [--github-user]");
   console.error("Set GITHUB_USER environment variable or pass --github-user option");
-  console.error("Set GH_PAT_FG environment variable");
+  console.error("Set GH_PAT environment variable");
   process.exit(1);
 }
 
