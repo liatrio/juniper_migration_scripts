@@ -3,10 +3,13 @@ import { getOrganizationInfo } from './queries/organizationQueries.js';
 import { getOrganizationRepositories } from './queries/repositoryQueries.js';
 import { getOrgMembers } from './queries/userQueries.js';
 import { argv } from "process";
+import { getTestQuery } from './queries/test.js';
 
 const credentials = {
   githubConvertedToken: process.env.GH_PAT
 };
+
+
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -18,7 +21,8 @@ const options = {
   skipArchive: args.includes('--skip-archive'),
   skipFork: args.includes('--skip-fork'),
   orgMembers: args.includes('--org-members'),
-  verbose: args.includes('-v') || args.includes('--verbose')
+  verbose: args.includes('-v') || args.includes('--verbose'),
+  test: args.includes('--test')
 };
 
 // Logging utility
@@ -30,10 +34,18 @@ const log = {
 
 };
 
-if (args.length < 1 || args[0].startsWith('-h') || !org || !credentials.githubConvertedToken) {
-  log.error("Usage: node org_summary.js <organization> [--skip-archive] [--skip-fork] [-v|--verbose]");
-  log.error("Set GH_PAT environment variable");
-  process.exit(1);
+
+if (options.test) {
+  log.info('Running test query...');
+  try {
+    const data = await getTestQuery(credentials.githubConvertedToken);
+    console.log(JSON.stringify(data, null, 2));
+    log.success('Test query completed successfully');
+    process.exit(0);
+  } catch (error) {
+    log.error(`Test query failed: ${error.message}`);
+    process.exit(1);
+  }
 }
 
 // Log configuration
@@ -44,6 +56,19 @@ if (options.verbose) log.info('Verbose logging enabled');
 
 log.verbose('Script configuration:');
 log.verbose(JSON.stringify({ org, options, outputFile: fileName }, null, 2));
+
+if (options.test) {
+  log.info('Running test query...');
+  try {
+    const data = await getTestQuery(credentials.githubConvertedToken);
+    console.log(JSON.stringify(data, null, 2));
+    log.success('Test query completed successfully');
+    process.exit(0);
+  } catch (error) {
+    log.error(`Test query failed: ${error.message}`);
+    process.exit(1);
+  }
+}
 
 if (options.orgMembers) {
   try {
