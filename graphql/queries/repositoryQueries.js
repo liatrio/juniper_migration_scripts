@@ -5,7 +5,7 @@ const getRepositoryQuery = (orgName, cursor = null, options = {}) => ({
     query {
       organization(login:"${orgName}") {
         repositories(
-          first: 100,
+          first: 10,
           orderBy: {field: CREATED_AT, direction: DESC}
           ${cursor ? `, after: "${cursor}"` : ''}
           ${options.skipFork ? ', isFork: false' : ''}
